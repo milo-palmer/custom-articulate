@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --font-pt: var(--font-pt-serif), serif;
+  --font-inter: var(--font-inter-v), sans-serif;
+}
+
+@theme {
+  --color-person: #ffcb0a;
+  --color-world: #0b6fa4;
+  --color-object: #009bd9;
+  --color-action: #f36f27;
+  --color-nature: #018551;
+  --color-random: #ed1a25;
+
+  --animate-slide: slide 250ms ease-in-out forwards;
+  --animate-slide-off: slide 250ms ease-in-out reverse;
+
+  @keyframes slide {
+    0% {
+      transform: translate(100%);
+    }
+    100% {
+      transform: translate(0%);
+    }
+  }
+}
+
+:root {
+  --radius: 0.5rem;
+}
