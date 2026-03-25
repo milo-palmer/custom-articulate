@@ -36,8 +36,6 @@ export async function GET(request: NextRequest) {
       pagination: false,
     });
 
-    console.log(duplicateChecks);
-
     if (duplicateChecks.docs.length > 0) {
       const matchingKeys = new Set<CardField>();
 
