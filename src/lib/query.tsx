@@ -1,22 +1,27 @@
-'use client'
+"use client";
 
-import { QueryClient, QueryClientProvider, UseQueryOptions } from '@tanstack/react-query'
-import { PropsWithChildren, useState } from 'react'
-import { CardType } from '@/lib/types'
+import { QueryClient, QueryClientProvider, UseQueryOptions } from "@tanstack/react-query";
+import { PropsWithChildren, useState } from "react";
+import { CardType } from "@/lib/types";
+import { Card } from "@/payload-types";
 
 export const AppQueryProvider = (props: PropsWithChildren) => {
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient());
 
-  return <QueryClientProvider client={queryClient}>{props.children}</QueryClientProvider>
-}
+  return <QueryClientProvider client={queryClient}>{props.children}</QueryClientProvider>;
+};
 
 export const FetchCardsQuery = () =>
   ({
-    queryKey: ['cards'],
+    queryKey: ["cards"],
     queryFn: async () => {
-      const res = await fetch('/api/cards')
-      const data = await res.json()
+      const res = await fetch("/api/cards?pagination=false");
+      const data = await res.json();
 
-      return data.cards as CardType[]
+      if (!data.docs && data.totalDocs === 0) {
+        return [];
+      }
+
+      return data.docs as Card[];
     },
-  }) satisfies UseQueryOptions
+  }) satisfies UseQueryOptions;

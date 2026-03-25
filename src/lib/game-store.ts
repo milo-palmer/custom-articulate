@@ -1,19 +1,19 @@
-import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
-import { CardType } from '@/lib/types'
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { Card } from "@/payload-types";
 
 export type GameState = {
-  currentId: string | null
-  spentCards: string[]
+  currentId: number | null;
+  spentCards: number[];
   settings: {
-    randomAllPlay: boolean
-  }
+    randomAllPlay: boolean;
+  };
   turn: {
-    history: string[]
-    skippedId: string | null | 'Done'
-    previousId: string | null
-  }
-}
+    history: number[];
+    skippedId: number | null | "Done";
+    previousId: number | null;
+  };
+};
 
 const useGameStore = create(
   persist(
@@ -29,43 +29,43 @@ const useGameStore = create(
           skippedId: null,
           previousId: null,
         },
-      }
+      };
 
-      return state
+      return state;
     },
     {
-      name: 'game-state',
+      name: "game-state",
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
-)
+);
 
-const emptyTurn: GameState['turn'] = {
+const emptyTurn: GameState["turn"] = {
   history: [],
   skippedId: null,
   previousId: null,
-}
+};
 
-const emptyGameState = (settings: GameState['settings']): GameState => {
+const emptyGameState = (settings: GameState["settings"]): GameState => {
   return {
     currentId: null,
     spentCards: [],
     settings,
     turn: emptyTurn,
-  }
-}
+  };
+};
 
-export const setNextCard = (currentId: string, cards: CardType[], skip?: boolean) => {
+export const setNextCard = (currentId: number, cards: Card[], skip?: boolean) => {
   useGameStore.setState((s) => {
-    const spentCardSet = new Set([...s.spentCards])
-    spentCardSet.add(currentId)
+    const spentCardSet = new Set([...s.spentCards]);
+    spentCardSet.add(currentId);
 
-    const remainingCards = cards.filter((c) => !spentCardSet.has(c._id ?? '__'))
-    const randomIndx = Math.floor(Math.random() * remainingCards.length)
-    const randomId = remainingCards[randomIndx]._id
+    const remainingCards = cards.filter((c) => !spentCardSet.has(c.id));
+    const randomIndx = Math.floor(Math.random() * remainingCards.length);
+    const randomId = remainingCards[randomIndx].id;
 
     if (spentCardSet.size + 2 >= cards.length) {
-      const arr = Array.from(spentCardSet).slice(-10)
+      const arr = Array.from(spentCardSet).slice(-10);
       return {
         ...s,
         currentId: randomId,
@@ -74,7 +74,7 @@ export const setNextCard = (currentId: string, cards: CardType[], skip?: boolean
           ...s.turn,
           history: s.currentId && !skip ? [...s.turn.history, s.currentId] : s.turn.history,
         },
-      }
+      };
     }
 
     return {
@@ -85,82 +85,82 @@ export const setNextCard = (currentId: string, cards: CardType[], skip?: boolean
         ...s.turn,
         history: s.currentId && !skip ? [...s.turn.history, s.currentId] : s.turn.history,
       },
-    }
-  })
-}
+    };
+  });
+};
 
 export const setNextTurn = () => {
   useGameStore.setState((s) => ({
     ...s,
     turn: emptyTurn,
-  }))
-}
+  }));
+};
 
-export const setSkippedCard = (currentId: string) => {
+export const setSkippedCard = (currentId: number | "Done") => {
   useGameStore.setState((s) => ({
     ...s,
     turn: {
       ...s.turn,
       skippedId: currentId,
     },
-  }))
-}
+  }));
+};
 
-export const setCurrentId = (id: string) => {
+export const setCurrentId = (id: number) => {
   useGameStore.setState((s) => ({
     ...s,
     currentId: id,
     spentCards: [...s.spentCards, id],
-  }))
-}
+  }));
+};
 
-export const setPreviousId = (id: string) => {
+export const setPreviousId = (id: number) => {
   useGameStore.setState((s) => ({
     ...s,
     turn: {
       ...s.turn,
       previousId: id,
     },
-  }))
-}
+  }));
+};
 
-export const addTurnHistory = (id: string) => {
+export const addTurnHistory = (id: number) => {
   useGameStore.setState((s) => ({
     ...s,
     turn: {
       ...s.turn,
       history: [...s.turn.history, id],
     },
-  }))
-}
+  }));
+};
 
 export const useCurrentCardId = () => {
-  return useGameStore((s) => s.currentId)
-}
+  return useGameStore((s) => s.currentId);
+};
 
 export const useCurrentSkippedCards = () => {
-  return useGameStore((s) => s.turn.skippedId)
-}
+  return useGameStore((s) => s.turn.skippedId);
+};
 
 export const useCurrentHistory = () => {
-  return useGameStore((s) => s.turn.history)
-}
+  return useGameStore((s) => s.turn.history);
+};
 
 export const usePreviousId = () => {
-  return useGameStore((s) => s.turn.previousId)
-}
+  return useGameStore((s) => s.turn.previousId);
+};
 
 export const resetGameState = () => {
-  return useGameStore.setState((s) => emptyGameState(s.settings))
-}
+  return useGameStore.setState((s) => emptyGameState(s.settings));
+};
 
 export const useCurrentSettings = () => {
-  return useGameStore((s) => s.settings)
-}
+  return useGameStore((s) => s.settings);
+};
 
-export const setCurrentSettings = (settings: GameState['settings']) => {
+export const setCurrentSettings = (settings: GameState["settings"]) => {
   return useGameStore.setState((s) => ({
     ...s,
     settings,
-  }))
-}
+  }));
+};

@@ -1,81 +1,81 @@
-'use client'
+"use client";
 
-import { SpadeIcon } from '@/components/icon'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { SpadeIcon } from "@/components/icon";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-const initialState = { message: '', error: false }
+const initialState = { message: "", error: false };
 
 const initialAllPlay: {
-  [key: number]: 'object' | 'person' | 'world' | 'action' | 'nature' | 'random'
+  [key: number]: "object" | "person" | "world" | "action" | "nature" | "random";
 } = {
-  0: 'person',
-  1: 'world',
-  2: 'random',
-  3: 'action',
-  4: 'nature',
-  5: 'object',
-}
+  0: "person",
+  1: "world",
+  2: "random",
+  3: "action",
+  4: "nature",
+  5: "object",
+};
 
 export default function CreatePage() {
-  const [message, setMessage] = useState<{ message: string; error: boolean }>(initialState)
+  const [message, setMessage] = useState<{ message: string; error: boolean }>(initialState);
 
   const [allPlay, setAllPlay] = useState<
-    'object' | 'person' | 'world' | 'action' | 'nature' | 'random' | ''
-  >('')
+    "object" | "person" | "world" | "action" | "nature" | "random" | ""
+  >("");
 
   useEffect(() => {
-    const randomInt = Math.floor(Math.random() * 6)
-    setAllPlay(initialAllPlay[randomInt])
-  }, [])
+    const randomInt = Math.floor(Math.random() * 6);
+    setAllPlay(initialAllPlay[randomInt]);
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      person: '',
-      world: '',
-      object: '',
-      action: '',
-      nature: '',
-      random: '',
+      person: "",
+      world: "",
+      object: "",
+      action: "",
+      nature: "",
+      random: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await fetch(
         `api/create?person=${values.person.trim()}&nature=${values.nature.trim()}&object=${values.object.trim()}&action=${values.action.trim()}&world=${values.world.trim()}&random=${values.random.trim()}&allplay=${allPlay}`,
-      )
+      );
       if (!response.ok) {
-        setMessage({ message: 'Something went wrong', error: true })
+        setMessage({ message: "Something went wrong", error: true });
       } else {
-        const result = await response.json()
+        const result = await response.json();
         if (result?.duplicates) {
           result.duplicates.forEach(
-            (duplicate: 'object' | 'person' | 'world' | 'action' | 'nature' | 'random') =>
+            (duplicate: "object" | "person" | "world" | "action" | "nature" | "random") =>
               form.setError(duplicate, {
                 message: `${duplicate} already exists in the set`,
               }),
-          )
-          return
+          );
+          return;
         }
         setMessage({
-          message: 'Submission created successfully',
+          message: "Submission created successfully",
           error: false,
-        })
-        form.reset()
-        const randomInt = Math.floor(Math.random() * 6)
-        setAllPlay(initialAllPlay[randomInt])
+        });
+        form.reset();
+        const randomInt = Math.floor(Math.random() * 6);
+        setAllPlay(initialAllPlay[randomInt]);
       }
     } catch (error) {
-      console.error(error)
-      setMessage({ message: 'Something went wrong', error: true })
+      console.error(error);
+      setMessage({ message: "Something went wrong", error: true });
     }
   }
 
@@ -104,10 +104,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('person')}
+                onClick={() => setAllPlay("person")}
                 className="cursor-pointer aspect-square bg-person min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay === 'person' && <SpadeIcon />}
+                {allPlay === "person" && <SpadeIcon />}
               </div>
             </div>
             <div className="flex gap-2">
@@ -127,10 +127,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('world')}
+                onClick={() => setAllPlay("world")}
                 className="cursor-pointer aspect-square bg-world min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay == 'world' && <SpadeIcon />}
+                {allPlay == "world" && <SpadeIcon />}
               </div>
             </div>
             <div className="flex gap-2">
@@ -150,10 +150,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('object')}
+                onClick={() => setAllPlay("object")}
                 className="cursor-pointer aspect-square bg-object min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay === 'object' && <SpadeIcon />}
+                {allPlay === "object" && <SpadeIcon />}
               </div>
             </div>
             <div className="flex gap-2">
@@ -173,10 +173,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('action')}
+                onClick={() => setAllPlay("action")}
                 className="cursor-pointer aspect-square bg-action min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay === 'action' && <SpadeIcon />}
+                {allPlay === "action" && <SpadeIcon />}
               </div>
             </div>
             <div className="flex gap-2">
@@ -196,10 +196,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('nature')}
+                onClick={() => setAllPlay("nature")}
                 className="cursor-pointer aspect-square bg-nature min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay === 'nature' && <SpadeIcon />}
+                {allPlay === "nature" && <SpadeIcon />}
               </div>
             </div>
             <div className="flex gap-2">
@@ -219,10 +219,10 @@ export default function CreatePage() {
                 )}
               />
               <div
-                onClick={() => setAllPlay('random')}
+                onClick={() => setAllPlay("random")}
                 className="cursor-pointer aspect-square bg-random min-w-6 min-h-6 max-w-6 max-h-6 flex items-center justify-center text-center border border-black"
               >
-                {allPlay === 'random' && <SpadeIcon />}
+                {allPlay === "random" && <SpadeIcon />}
               </div>
             </div>
           </div>
@@ -235,8 +235,8 @@ export default function CreatePage() {
           </Button>
           {message.message && (
             <p
-              className={cn('text-lg', {
-                'text-red-500': message.error,
+              className={cn("text-lg", {
+                "text-red-500": message.error,
               })}
             >
               {message.message}
@@ -245,14 +245,14 @@ export default function CreatePage() {
         </form>
       </Form>
     </div>
-  )
+  );
 }
 
 const formSchema = z.object({
-  person: z.string().min(1, { message: 'Required' }),
-  world: z.string().min(1, { message: 'Required' }),
-  object: z.string().min(1, { message: 'Required' }),
-  action: z.string().min(1, { message: 'Required' }),
-  nature: z.string().min(1, { message: 'Required' }),
-  random: z.string().min(1, { message: 'Required' }),
-})
+  person: z.string().min(1, { message: "Required" }),
+  world: z.string().min(1, { message: "Required" }),
+  object: z.string().min(1, { message: "Required" }),
+  action: z.string().min(1, { message: "Required" }),
+  nature: z.string().min(1, { message: "Required" }),
+  random: z.string().min(1, { message: "Required" }),
+});
