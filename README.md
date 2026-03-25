@@ -2,9 +2,9 @@
 
 Welcome to Version 2! V1 proved the concept worked, but we quickly ran into a problem: everyone was sharing the same deck of cards.
 
-This completely rebuilt version introduces isolated friend groups so multiple circles can play at the same time.
+The goal is to rebuilt a version that introduces isolated friend groups so multiple circles can play at the same time.
 
-## What's new in V2?
+## What's coming new in V2?
 
 - **User Auth:** Secure login and account management.
 - **Friend Groups:** Create distinct groups (e.g., "Uni Mates", "Work Crew").
