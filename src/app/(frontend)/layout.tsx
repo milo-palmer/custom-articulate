@@ -1,19 +1,41 @@
-import React from 'react'
-import './styles.css'
+import type { Metadata } from "next";
+import { PT_Serif, Inter } from "next/font/google";
+import "./globals.css";
+import { Nav } from "@/components/nav";
+import { AppQueryProvider } from "@/lib/query";
 
-export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
-}
+const ptSerif = PT_Serif({
+    variable: "--font-pt-serif",
+    weight: ["400", "700"],
+    subsets: ["latin"],
+});
+const inter = Inter({
+    variable: "--font-inter-v",
+    weight: ["400", "700"],
+    subsets: ["latin"],
+});
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
+export const metadata: Metadata = {
+    title: "Articulate",
+    description: "Baydreaming's custom articulate card creator",
+};
 
-  return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
-    </html>
-  )
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <html lang="en">
+            <body
+                className={`${ptSerif.variable} ${inter.variable} font-inter antialiased text-black bg-black/5`}
+
+            >
+                <AppQueryProvider>
+                    <Nav />
+                    {children}
+                </AppQueryProvider>
+            </body>
+        </html>
+    );
 }
